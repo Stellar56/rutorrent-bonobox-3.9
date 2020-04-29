@@ -19,9 +19,9 @@
 # apt-get install git-core -y
 #
 # cd /tmp
-# git clone https://github.com/exrat/rutorrent-bonobox
-# cd rutorrent-bonobox
-# chmod a+x bonobox.sh && ./bonobox.sh
+# git clone https://github.com/Stellar56/rutorrent-bonobox-3.9
+# cd rutorrent-bonobox-3.9
+# chmod a+x bonobox.sh && ./bonobox.sh --fr
 #
 # Pour gérer vos utilisateurs ultérieurement, il vous suffit de relancer le script
 #
