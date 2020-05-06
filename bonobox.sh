@@ -158,42 +158,43 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 	"$CMDECHO" ""; set "132" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
 	"$CMDAPTGET" install -y \
-		apache2-utils \
-		apt-utils \
-		aptitude \
-		automake \
-		build-essential \
-		ccze \
-		curl \
-		dnsutils \
-		fail2ban \
-		ffmpeg \
-		gawk \
-		htop \
-		irssi \
-		libarchive-zip-perl \
-		libcppunit-dev \
-		libcurl4-openssl-dev \
-		libjson-perl \
-		libjson-xs-perl \
-		libmms0 \
-		libncurses5-dev \
-		libncursesw5-dev \
-		libsigc++-2.0-dev \
-		libsox-fmt-all \
-		libsox-fmt-mp3 \
-		libssl-dev \
-		libtool \
-		libwww-perl \
-		mediainfo \
-		mktorrent \
-		nano \
-		nginx \
-		ntp \
-		nmap \
-		ntpdate \
-		openssl \
-		pastebinit \
+	apache2-utils \
+	apt-utils \
+	aptitude \
+	automake \
+	build-essential \
+	ccze \
+	curl \
+	dnsutils \
+	fail2ban \
+	ffmpeg \
+	gawk \
+	htop \
+	irssi \
+	libarchive-zip-perl \
+	libcppunit-dev \
+	libcurl4-openssl-dev \
+	libjson-perl \
+	libjson-xs-perl \
+	libmms0 \
+	libncurses5-dev \
+	libncursesw5-dev \
+	libsigc++-2.0-dev \
+	libsox-fmt-all \
+	libsox-fmt-mp3 \
+	libssl-dev \
+	libtool \
+	libwww-perl \
+	mediainfo \
+	mktorrent \
+	net-tools \
+	nano \
+	nginx \
+	ntp \
+	nmap \
+	ntpdate \
+	openssl \
+	pastebinit \
 		"$PHPNAME" \
 		"$PHPNAME"-cli \
 		"$PHPNAME"-common \
@@ -205,30 +206,30 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 		"$PHPNAME"-readline \
 		"$PHPNAME"-xml \
 		"$PHPNAME"-zip \
-		php-geoip \
-		pkg-config \
-		psmisc \
-		pv \
-		python \
-		python-pip \
-		rar \
-		screen \
-		sox \
-		subversion \
-		unrar \
-		unzip \
-		vim \
-		whois \
-		zip \
-		zlib1g-dev
+	php-geoip \
+	pkg-config \
+	psmisc \
+	pv \
+	python \
+	python-pip \
+	rar \
+	screen \
+	sox \
+	subversion \
+	unrar \
+	unzip \
+	vim \
+	whois \
+	zip \
+	zlib1g-dev
 
 if [[ "$VERSION" = 9.* ]]; then
-			"$CMDAPTGET" install -y \
-				libtinyxml2-4
+	"$CMDAPTGET" install -y \
+		libtinyxml2-4
 
-		elif [[ "$VERSION" = 10.* ]]; then
-			"$CMDAPTGET" install -y \
-				libtinyxml2-6a
+elif [[ "$VERSION" = 10.* ]]; then
+	"$CMDAPTGET" install -y \
+		libtinyxml2-6a
 fi
 
 	"$CMDECHO" ""; set "136" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
@@ -331,7 +332,7 @@ fi
 
 	# installation des plugins - thank Micdu70 ;)
 	cd /tmp || exit
-	"$CMDGIT" clone --progress https://github.com/exrat/rutorrent-plugins-pack
+	"$CMDGIT" clone --progress https://github.com/Stellar56/rutorrent-plugins-pack
 
 	for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2' 'lbll-suite' 'logoff' 'nfo' 'pausewebui'  'ratiocolor' 'titlebar' 'trackerstatus'; do
 		"$CMDCP" -R /tmp/rutorrent-plugins-pack/"$PLUGINS" "$RUPLUGINS"/
@@ -503,7 +504,7 @@ fi
 	"$CMDECHO" ""; set "166" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
 	# configuration user rutorrent.conf
-	FONCRTCONF "$USERMAJ"  "$PORT" "$USER"
+	FONCRTCONF "$USERMAJ" "$PORT" "$USER"
 
 	# config.php
 	FONCPHPCONF "$USER" "$PORT" "$USERMAJ"
@@ -569,7 +570,7 @@ fi
 	FONCSERVICE restart fail2ban
 
 	# installation vsftpd
-	if FONCYES "$SERVFTP"; then
+if FONCYES "$SERVFTP"; then
 		"$CMDAPTGET" install -y vsftpd
 		"$CMDCP" -f "$FILES"/vsftpd/vsftpd.conf /etc/vsftpd.conf
 
@@ -580,7 +581,7 @@ fi
 		"$CMDTOUCH" /etc/vsftpd.chroot_list
 		"$CMDTOUCH" /var/log/vsftpd.log
 		"$CMDCHMOD" 600 /var/log/vsftpd.log
-		FONCSERVICE restart vsftpd
+	FONCSERVICE restart vsftpd
 
 		"$CMDSED"  -i "/vsftpd/,+10d" /etc/fail2ban/jail.local
 
@@ -599,7 +600,7 @@ fi
 			maxretry = 5
 		EOF
 
-		FONCSERVICE restart fail2ban
+	FONCSERVICE restart fail2ban
 		"$CMDECHO" ""; set "172" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 	fi
 
@@ -608,14 +609,14 @@ fi
 	"$CMDCHMOD" 600 "$NGINXSSL"/dhparams.pem
 	FONCSERVICE restart nginx
 	# contrôle clé 2048 bits
-	if [ ! -f "$NGINXSSL"/dhparams.pem ]; then
+if [ ! -f "$NGINXSSL"/dhparams.pem ]; then
 		"$CMDKILL" -HUP "$("$CMDPGREP" -x openssl)"
 		"$CMDECHO" ""; set "174"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-		set "176"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
-		cd "$NGINXSSL" || exit
+	set "176"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
+	cd "$NGINXSSL" || exit
 		"$CMDOPENSSL" dhparam -out dhparams.pem 2048
 		"$CMDCHMOD" 600 dhparams.pem
-		FONCSERVICE restart nginx
+	FONCSERVICE restart nginx
 		"$CMDECHO" ""; set "178" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 	fi
 
@@ -625,131 +626,131 @@ fi
 	"$CMDSED" -i "s/userlog/$USER:5001/g;" "$RUTORRENT"/"$HISTOLOG".log
 
 	set "180"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-	if [ ! -f "$ARGFILE" ]; then
+if [ ! -f "$ARGFILE" ]; then
 		"$CMDECHO" ""; set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
-		set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
-		set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
-		set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
+	set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
+	set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
+	set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
 	fi
 
 	# ajout utilisateur supplémentaire
-	while :; do
-		if [ ! -f "$ARGFILE" ]; then
-			set "190"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
-			read -r REPONSE
-		else
-			if [ -s "$ARGFILE" ]; then
-				REPONSE="y"
-			else
-				REPONSE="n"
-			fi
-		fi
+while :; do
+if [ ! -f "$ARGFILE" ]; then
+	set "190"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
+	read -r REPONSE
+else
+if [ -s "$ARGFILE" ]; then
+		REPONSE="y"
+else
+		REPONSE="n"
+fi
+fi
 
-		if FONCNO "$REPONSE"; then
-			# fin d'installation
-			"$CMDECHO" ""; set "192"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-			CLEANPASS="$("$CMDGREP" 182 "$BONOBOX"/lang/"$GENLANG".lang | "$CMDCUT" -c5- | "$CMDSED" "s/.$//")"
-			"$CMDSED" -i "/$CLEANPASS/,+4d" /tmp/install.log
-			"$CMDCP" -f /tmp/install.log "$RUTORRENT"/install.log
-			"$CMDPV" -f "$RUTORRENT"/install.log | "$CMDCCZE" -h > "$RUTORRENT"/install.html
-			"$CMDTRUE" > /var/log/nginx/rutorrent-error.log
-			if [ -z "$ARGREBOOT" ]; then
-				"$CMDECHO" ""; set "194"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
-				read -r REBOOT
-			else
-				if [ "$ARGREBOOT" = "reboot-off" ]; then
-					break
-				else
-					"$CMDSYSTEMCTL" reboot
-					break
+if FONCNO "$REPONSE"; then
+		# fin d'installation
+		"$CMDECHO" ""; set "192"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+	CLEANPASS="$("$CMDGREP" 182 "$BONOBOX"/lang/"$GENLANG".lang | "$CMDCUT" -c5- | "$CMDSED" "s/.$//")"
+		"$CMDSED" -i "/$CLEANPASS/,+4d" /tmp/install.log
+		"$CMDCP" -f /tmp/install.log "$RUTORRENT"/install.log
+		"$CMDPV" -f "$RUTORRENT"/install.log | "$CMDCCZE" -h > "$RUTORRENT"/install.html
+		"$CMDTRUE" > /var/log/nginx/rutorrent-error.log
+if [ -z "$ARGREBOOT" ]; then
+		"$CMDECHO" ""; set "194"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
+	read -r REBOOT
+else
+if [ "$ARGREBOOT" = "reboot-off" ]; then
+		break
+else
+		"$CMDSYSTEMCTL" reboot
+		break
 				fi
 			fi
 
-			if FONCNO "$REBOOT"; then
-				"$CMDECHO" ""; set "196"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-				"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/install.html${CEND}"
-				"$CMDECHO" ""; set "200"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"
-				"$CMDECHO" ""; set "202"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-				"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/${CEND}"
-				"$CMDECHO" ""; "$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-				"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
-				break
-			fi
+if FONCNO "$REBOOT"; then
+		"$CMDECHO" ""; set "196"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+		"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/install.html${CEND}"
+		"$CMDECHO" ""; set "200"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"
+		"$CMDECHO" ""; set "202"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+		"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/${CEND}"
+		"$CMDECHO" ""; "$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+		"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
+		break
+fi
 
-			if FONCYES "$REBOOT"; then
-				"$CMDECHO" ""; set "196"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-				"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/install.html${CEND}"
-				"$CMDECHO" ""; set "202"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-				"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/${CEND}"
-				"$CMDECHO" ""; "$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-				"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
-				"$CMDSYSTEMCTL" reboot
-				break
-			fi
+if FONCYES "$REBOOT"; then
+		"$CMDECHO" ""; set "196"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+		"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/install.html${CEND}"
+		"$CMDECHO" ""; set "202"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+		"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/${CEND}"
+		"$CMDECHO" ""; "$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
+		"$CMDECHO" -e "${CBLUE}                  Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
+		"$CMDSYSTEMCTL" reboot
+			break
 		fi
+	fi
 
-		if FONCYES "$REPONSE"; then
-			if [ ! -s "$ARGFILE" ]; then
-				"$CMDECHO" ""
-				FONCUSER # demande nom user
-				"$CMDECHO" ""
-				FONCPASS # demande mot de passe
-			else
-				FONCARG
-			fi
+if FONCYES "$REPONSE"; then
+if [ ! -s "$ARGFILE" ]; then
+		"$CMDECHO" ""
+	FONCUSER # demande nom user
+		"$CMDECHO" ""
+	FONCPASS # demande mot de passe
+else
+		FONCARG
+	fi
 
-			# récupération 5% root sur /home/user si présent
-			FONCFSUSER "$USER"
+		# récupération 5% root sur /home/user si présent
+	FONCFSUSER "$USER"
 
-			# variable passe nginx
-			PASSNGINX=${USERPWD}
+		# variable passe nginx
+	PASSNGINX=${USERPWD}
 
-			# ajout utilisateur
-			"$CMDUSERADD" -M -s /bin/bash "$USER"
+		# ajout utilisateur
+		"$CMDUSERADD" -M -s /bin/bash "$USER"
 
-			# création mot de passe utilisateur
-			"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
+		# création mot de passe utilisateur
+		"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
 
-			# anti-bug /home/user déjà existant
-			"$CMDMKDIR" -p /home/"$USER"
-			"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
+		# anti-bug /home/user déjà existant
+		"$CMDMKDIR" -p /home/"$USER"
+		"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
 
-			# variable utilisateur majuscule
-			USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
+		# variable utilisateur majuscule
+		USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
 
-			# création de dossier
-			"$CMDSU" "$USER" -c ""$CMDMKDIR" -p ~/watch ~/torrents ~/.session ~/.backup-session"
+		# création de dossier
+		"$CMDSU" "$USER" -c ""$CMDMKDIR" -p ~/watch ~/torrents ~/.session ~/.backup-session"
 
-			# calcul port
-			FONCPORT
+		# calcul port
+	FONCPORT
 
-			# configuration .rtorrent.rc
-			FONCTORRENTRC "$USER" "$PORT" "$RUTORRENT"
+		# configuration .rtorrent.rc
+	FONCTORRENTRC "$USER" "$PORT" "$RUTORRENT"
 
-			# configuration user rutorrent.conf
+		# configuration user rutorrent.conf
 			"$CMDSED" -i '$d' "$NGINXENABLE"/rutorrent.conf
-			FONCRTCONF "$USERMAJ"  "$PORT" "$USER"
+	FONCRTCONF "$USERMAJ"  "$PORT" "$USER"
 
-			# configuration script bakup .session
-			FONCBAKSESSION
+		# configuration script bakup .session
+	FONCBAKSESSION
 
 			# config.php
 			"$CMDMKDIR" "$RUCONFUSER"/"$USER"
 			FONCPHPCONF "$USER" "$PORT" "$USERMAJ"
 
-			# chroot user supplèmentaire
-			"$CMDCAT" <<- EOF >> /etc/ssh/sshd_config
+		# chroot user supplèmentaire
+		"$CMDCAT" <<- EOF >> /etc/ssh/sshd_config
 				Match User $USER
 				ChrootDirectory /home/$USER
 			EOF
 
-			FONCSERVICE restart ssh
+	FONCSERVICE restart ssh
 
 			# plugins.ini
 			"$CMDCP" -f "$FILES"/rutorrent/plugins.ini "$RUCONFUSER"/"$USER"/plugins.ini
 
 			# configuration autodl-irssi
-			FONCIRSSI "$USER" "$PORT" "$USERPWD"
+	FONCIRSSI "$USER" "$PORT" "$USERPWD"
 
 			# permissions
 			"$CMDCHOWN" -R "$WDATA" "$RUTORRENT"
@@ -769,7 +770,7 @@ fi
 			# log users
 			"$CMDECHO" "userlog">> "$RUTORRENT"/"$HISTOLOG".log
 			"$CMDSED" -i "s/userlog/$USER:$PORT/g;" "$RUTORRENT"/"$HISTOLOG".log
-			if [ ! -f "$ARGFILE" ]; then
+if [ ! -f "$ARGFILE" ]; then
 				"$CMDECHO" ""; set "218"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
 				set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
 				set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
