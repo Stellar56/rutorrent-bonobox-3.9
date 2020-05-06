@@ -334,7 +334,7 @@ fi
 	cd /tmp || exit
 	"$CMDGIT" clone --progress https://github.com/Stellar56/rutorrent-plugins-pack
 
-	for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2' 'lbll-suite' 'logoff' 'nfo' 'pausewebui'  'ratiocolor' 'titlebar' 'trackerstatus'; do
+	for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2' 'lbll-suite' 'logoff' 'nfo' 'pausewebui' 'ratiocolor' 'titlebar' 'trackerstatus'; do
 		"$CMDCP" -R /tmp/rutorrent-plugins-pack/"$PLUGINS" "$RUPLUGINS"/
 	done
 
@@ -453,17 +453,17 @@ fi
 	# configuration serveur web
 	"$CMDMKDIR" "$NGINXENABLE"
 	"$CMDCP" -f "$FILES"/nginx/nginx.conf "$NGINX"/nginx.conf
-	for CONF in 'log_rutorrent.conf' 'ciphers.conf' 'cache.conf' 'php.conf'; do
+for CONF in 'log_rutorrent.conf' 'ciphers.conf' 'cache.conf' 'php.conf'; do
 		"$CMDCP" -f "$FILES"/nginx/"$CONF" "$NGINXCONFD"/"$CONF"
-	done
-	"$CMDSED" -i "s|@PHPSOCK@|$PHPSOCK|g;" "$NGINXCONFD"/php.conf
+done
+		"$CMDSED" -i "s|@PHPSOCK@|$PHPSOCK|g;" "$NGINXCONFD"/php.conf
 
-	"$CMDCP" -f "$FILES"/rutorrent/rutorrent.conf "$NGINXENABLE"/rutorrent.conf
-	for VAR in "${!NGINXCONFD@}" "${!NGINXBASE@}" "${!NGINXSSL@}" "${!NGINXPASS@}" "${!NGINXWEB@}" "${!USER@}"; do
+		"$CMDCP" -f "$FILES"/rutorrent/rutorrent.conf "$NGINXENABLE"/rutorrent.conf
+for VAR in "${!NGINXCONFD@}" "${!NGINXBASE@}" "${!NGINXSSL@}" "${!NGINXPASS@}" "${!NGINXWEB@}" "${!USER@}"; do
 		"$CMDSED" -i "s|@${VAR}@|${!VAR}|g;" "$NGINXENABLE"/rutorrent.conf
-	done
+done
 
-	"$CMDECHO" ""; set "152" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
+		"$CMDECHO" ""; set "152" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
 	# configuration ssl
 	"$CMDOPENSSL" req -new -x509 -aes128 -days 3658 -nodes -newkey rsa:4096 -out "$NGINXSSL"/server.crt -keyout "$NGINXSSL"/server.key <<- EOF
@@ -538,7 +538,7 @@ fi
 	"$CMDCP" -f "$FILES"/fail2ban/nginx-badbots.conf /etc/fail2ban/filter.d/nginx-badbots.conf
 
 	"$CMDCP" -f /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-	"$CMDSED"  -i "/ssh/,+6d" /etc/fail2ban/jail.local
+	"$CMDSED" -i "/ssh/,+6d" /etc/fail2ban/jail.local
 
 	"$CMDCAT" <<- EOF >> /etc/fail2ban/jail.local
 
@@ -575,8 +575,8 @@ if FONCYES "$SERVFTP"; then
 		"$CMDCP" -f "$FILES"/vsftpd/vsftpd.conf /etc/vsftpd.conf
 
 		# récupèration certificats nginx
-		"$CMDCP" -f "$NGINXSSL"/server.crt  /etc/ssl/private/vsftpd.cert.pem
-		"$CMDCP" -f "$NGINXSSL"/server.key  /etc/ssl/private/vsftpd.key.pem
+		"$CMDCP" -f "$NGINXSSL"/server.crt /etc/ssl/private/vsftpd.cert.pem
+		"$CMDCP" -f "$NGINXSSL"/server.key /etc/ssl/private/vsftpd.key.pem
 
 		"$CMDTOUCH" /etc/vsftpd.chroot_list
 		"$CMDTOUCH" /var/log/vsftpd.log
@@ -673,7 +673,7 @@ if FONCNO "$REBOOT"; then
 		"$CMDECHO" ""; set "202"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
 		"$CMDECHO" -e "${CYELLOW}https://$IP/rutorrent/${CEND}"
 		"$CMDECHO" ""; "$CMDECHO" ""; set "210"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-		"$CMDECHO" -e "${CBLUE}                          Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
+		"$CMDECHO" -e "${CBLUE}                  Ex_Rat - http://mondedie.fr${CEND}"; "$CMDECHO" ""
 		break
 fi
 
@@ -706,20 +706,20 @@ else
 	PASSNGINX=${USERPWD}
 
 		# ajout utilisateur
-		"$CMDUSERADD" -M -s /bin/bash "$USER"
+	"$CMDUSERADD" -M -s /bin/bash "$USER"
 
 		# création mot de passe utilisateur
-		"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
+	"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
 
 		# anti-bug /home/user déjà existant
-		"$CMDMKDIR" -p /home/"$USER"
-		"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
+	"$CMDMKDIR" -p /home/"$USER"
+	"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
 
 		# variable utilisateur majuscule
-		USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
+	USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
 
 		# création de dossier
-		"$CMDSU" "$USER" -c ""$CMDMKDIR" -p ~/watch ~/torrents ~/.session ~/.backup-session"
+	"$CMDSU" "$USER" -c ""$CMDMKDIR" -p ~/watch ~/torrents ~/.session ~/.backup-session"
 
 		# calcul port
 	FONCPORT
@@ -729,14 +729,14 @@ else
 
 		# configuration user rutorrent.conf
 			"$CMDSED" -i '$d' "$NGINXENABLE"/rutorrent.conf
-	FONCRTCONF "$USERMAJ"  "$PORT" "$USER"
+	FONCRTCONF "$USERMAJ" "$PORT" "$USER"
 
 		# configuration script bakup .session
 	FONCBAKSESSION
 
-			# config.php
-			"$CMDMKDIR" "$RUCONFUSER"/"$USER"
-			FONCPHPCONF "$USER" "$PORT" "$USERMAJ"
+		# config.php
+		"$CMDMKDIR" "$RUCONFUSER"/"$USER"
+	FONCPHPCONF "$USER" "$PORT" "$USERMAJ"
 
 		# chroot user supplèmentaire
 		"$CMDCAT" <<- EOF >> /etc/ssh/sshd_config
@@ -746,39 +746,39 @@ else
 
 	FONCSERVICE restart ssh
 
-			# plugins.ini
-			"$CMDCP" -f "$FILES"/rutorrent/plugins.ini "$RUCONFUSER"/"$USER"/plugins.ini
+		# plugins.ini
+		"$CMDCP" -f "$FILES"/rutorrent/plugins.ini "$RUCONFUSER"/"$USER"/plugins.ini
 
-			# configuration autodl-irssi
+		# configuration autodl-irssi
 	FONCIRSSI "$USER" "$PORT" "$USERPWD"
 
-			# permissions
-			"$CMDCHOWN" -R "$WDATA" "$RUTORRENT"
-			"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
-			"$CMDCHOWN" root:"$USER" /home/"$USER"
-			"$CMDCHMOD" 755 /home/"$USER"
+		# permissions
+		"$CMDCHOWN" -R "$WDATA" "$RUTORRENT"
+		"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
+		"$CMDCHOWN" root:"$USER" /home/"$USER"
+		"$CMDCHMOD" 755 /home/"$USER"
 
-			# script rtorrent
-			FONCSCRIPTRT "$USER"
-			FONCSERVICE start "$USER"-rtorrent
-			FONCSERVICE start "$USER"-irssi
+		# script rtorrent
+	FONCSCRIPTRT "$USER"
+	FONCSERVICE start "$USER"-rtorrent
+	FONCSERVICE start "$USER"-irssi
 
-			# htpasswd
-			FONCHTPASSWD "$USER"
-			FONCSERVICE restart nginx
+		# htpasswd
+	FONCHTPASSWD "$USER"
+	FONCSERVICE restart nginx
 
-			# log users
-			"$CMDECHO" "userlog">> "$RUTORRENT"/"$HISTOLOG".log
-			"$CMDSED" -i "s/userlog/$USER:$PORT/g;" "$RUTORRENT"/"$HISTOLOG".log
+		# log users
+		"$CMDECHO" "userlog">> "$RUTORRENT"/"$HISTOLOG".log
+		"$CMDSED" -i "s/userlog/$USER:$PORT/g;" "$RUTORRENT"/"$HISTOLOG".log
 if [ ! -f "$ARGFILE" ]; then
-				"$CMDECHO" ""; set "218"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
-				set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
-				set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
-				set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
-				set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
-			fi
+		"$CMDECHO" ""; set "218"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
+	set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
+	set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
+	set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
+	set "188"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"; "$CMDECHO" ""
 		fi
-	done
+	fi
+done
 else
 	# lancement lancement gestion des utilisateurs
 	"$CMDCHMOD" +x ./gestion-users.sh
