@@ -51,22 +51,23 @@ FONCCONTROL
 FONCBASHRC
 
 # contrôle installation
-if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
+if [! -f "$NGINXENABLE"/rutorrent.conf]; then
 	# contröle wget
-	if [ ! -f "$CMDWGET" ]; then
+if [! -f "$CMDWGET"]; then
 		"$CMDAPTGET" install -y wget &>/dev/null
-	fi
+fi
+
 	# log de l'installation
 	exec > >("$CMDTEE" "/tmp/install.log") 2>&1
 	# liste users en arguments
 	TESTARG=$("$CMDECHO" "$ARG" | "$CMDTR" -s ' ' '\n' | "$CMDGREP" :)
-	if [ ! -z "$TESTARG" ]; then
+if [! -z "$TESTARG"]; then
 		"$CMDECHO" "$ARG" | "$CMDTR" -s ' ' '\n' | "$CMDGREP" : > "$ARGFILE"
-	fi
+fi
 
-	####################################
-	# lancement installation ruTorrent #
-	####################################
+####################################
+# lancement installation ruTorrent #
+####################################
 
 	# message d'accueil
 	"$CMDCLEAR"
@@ -74,37 +75,37 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 	# shellcheck source=/dev/null
 	. "$INCLUDES"/logo.sh
 
-	if [ ! -s "$ARGFILE" ]; then
+if [! -s "$ARGFILE"]; then
 		"$CMDECHO" ""
 		FONCUSER # demande nom user
 		"$CMDECHO" ""
 		FONCPASS # demande mot de passe
-	else
+else
 		FONCARG
-	fi
+fi
 
 	PORT=5001
 
 	# installation vsftpd
-	if [ -z "$ARGFTP" ]; then
+if [-z "$ARGFTP"]; then
 		"$CMDECHO" ""; set "128"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
 		read -r SERVFTP
-	else
-		if [ "$ARGFTP" = "ftp-off" ]; then
-			SERVFTP="n"
-		else
-			SERVFTP="y"
-		fi
-	fi
+else
+if ["$ARGFTP" = "ftp-off"]; then
+		SERVFTP="n"
+else
+		SERVFTP="y"
+fi
+fi
 
 	# récupération 5% root sur /home ou /home/user si présent
 	FSHOME=$("$CMDDF" -h | "$CMDGREP" /home | "$CMDCUT" -c 6-9)
-	if [ "$FSHOME" = "" ]; then
+if ["$FSHOME" = ""]; then
 		"$CMDECHO"
-	else
+else
 		"$CMDTUNE2FS" -m 0 /dev/"$FSHOME" &> /dev/null
 		"$CMDMOUNT" -o remount /home &> /dev/null
-	fi
+fi
 
 	FONCFSUSER "$USER"
 
@@ -129,23 +130,23 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 
 	# récupération threads & sécu -j illimité
 	THREAD=$("$CMDGREP" -c processor < /proc/cpuinfo)
-	if [ "$THREAD" = "" ]; then
+if ["$THREAD" = ""]; then
 		THREAD=1
-	fi
+fi
 
 	# ajout dépôts
 	# shellcheck source=/dev/null
 	. "$INCLUDES"/deb.sh
 
 	# bind9 & dhcp
-	if [ ! -d /etc/bind ]; then
+if [! -d /etc/bind]; then
 		"$CMDRM" /etc/init.d/bind9 &> /dev/null
-		"$CMDAPTGET" install -y bind9
-	fi
+		"$CMDAPTGET" install bind9 -y
+fi
 
-	if [ -f /etc/dhcp/dhclient.conf ]; then
+if [-f /etc/dhcp/dhclient.conf]; then
 		"$CMDSED" -i "s/#prepend domain-name-servers 127.0.0.1;/prepend domain-name-servers 127.0.0.1;/g;" /etc/dhcp/dhclient.conf
-	fi
+fi
 
 	"$CMDCP" -f "$FILES"/bind/named.conf.options /etc/bind/named.conf.options
 
@@ -206,6 +207,8 @@ if [ ! -f "$NGINXENABLE"/rutorrent.conf ]; then
 		"$PHPNAME"-readline \
 		"$PHPNAME"-xml \
 		"$PHPNAME"-zip \
+		"$PHPNAME"-gd \
+		"$PHPNAME"-geoip \
 	php-geoip \
 	pkg-config \
 	psmisc \
@@ -234,8 +237,8 @@ fi
 
 	"$CMDECHO" ""; set "136" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# génération clé 2048 bits
-	"$CMDOPENSSL" dhparam -out dhparams.pem 2048 >/dev/null 2>&1 &
+	# génération clé 3072 bits
+	"$CMDOPENSSL" dhparam -out dhparams.pem 3072 >/dev/null 2>&1 &
 
 	# téléchargement complément favicons
 	"$CMDWGET" -T 10 -t 3 http://www.bonobox.net/script/favicon.tar.gz || "$CMDWGET" -T 10 -t 3 http://alt.bonobox.net/favicon.tar.gz
@@ -262,7 +265,7 @@ fi
 	"$CMDECHO" ""; set "138" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
 	# configuration ntp & réglage heure fr
-	if [ "$GENLANG" = "fr" ]; then
+if [ "$GENLANG" = "fr" ]; then
 		"$CMDECHO" "Europe/Paris" > /etc/timezone
 		"$CMDCP" -f /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
@@ -334,7 +337,7 @@ fi
 	cd /tmp || exit
 	"$CMDGIT" clone --progress https://github.com/Stellar56/rutorrent-plugins-pack
 
-	for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2' 'lbll-suite' 'logoff' 'nfo' 'pausewebui' 'ratiocolor' 'titlebar' 'trackerstatus'; do
+for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2' 'lbll-suite' 'logoff' 'nfo' 'pausewebui' 'ratiocolor' 'titlebar' 'trackerstatus'; do
 		"$CMDCP" -R /tmp/rutorrent-plugins-pack/"$PLUGINS" "$RUPLUGINS"/
 	done
 
@@ -345,7 +348,7 @@ fi
 	# configuration geoip2
 	cd "$RUPLUGINS"/geoip2/database || exit
 
-	for DATABASE in *.tar.gz; do
+for DATABASE in *.tar.gz; do
 		"$CMDTAR" xzfv "$DATABASE"
 	done
 
@@ -398,7 +401,7 @@ fi
 
 	cd "$SCRIPT" || exit
 
-	for COPY in 'updateGeoIP.sh' 'backup-session.sh'; do
+for COPY in 'updateGeoIP.sh' 'backup-session.sh'; do
 		"$CMDCP" -f "$FILES"/scripts/"$COPY" "$SCRIPT"/"$COPY"
 		"$CMDCHMOD" a+x "$COPY"
 	done
@@ -430,13 +433,13 @@ fi
 	"$CMDSED" -i "s/8M/10M/g;" "$PHPPATH"/fpm/php.ini
 	"$CMDSED" -i "s/expose_php = On/expose_php = Off/g;" "$PHPPATH"/fpm/php.ini
 
-	if [ "$GENLANG" = "fr" ]; then
+if [ "$GENLANG" = "fr" ]; then
 		"$CMDSED" -i "s/^;date.timezone =/date.timezone = Europe\/Paris/g;" "$PHPPATH"/fpm/php.ini
 		"$CMDSED" -i "s/^;date.timezone =/date.timezone = Europe\/Paris/g;" "$PHPPATH"/cli/php.ini
-	else
+else
 		"$CMDSED" -i "s/^;date.timezone =/date.timezone = UTC/g;" "$PHPPATH"/fpm/php.ini
 		"$CMDSED" -i "s/^;date.timezone =/date.timezone = UTC/g;" "$PHPPATH"/cli/php.ini
-	fi
+fi
 
 	"$CMDSED" -i "s/^;listen.owner = www-data/listen.owner = www-data/g;" "$PHPPATH"/fpm/pool.d/www.conf
 	"$CMDSED" -i "s/^;listen.group = www-data/listen.group = www-data/g;" "$PHPPATH"/fpm/pool.d/www.conf
@@ -466,7 +469,7 @@ done
 		"$CMDECHO" ""; set "152" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
 	# configuration ssl
-	"$CMDOPENSSL" req -new -x509 -aes128 -days 3658 -nodes -newkey rsa:4096 -out "$NGINXSSL"/server.crt -keyout "$NGINXSSL"/server.key <<- EOF
+	"$CMDOPENSSL" req -x509 -sha512 -nodes -days 3658 -newkey rsa:4096 -keyout "$NGINXSSL"/server.key -out "$NGINXSSL"/server.crt <<- EOF
 		KP
 		North Korea
 		Pyongyang
@@ -571,7 +574,7 @@ done
 
 	# installation vsftpd
 if FONCYES "$SERVFTP"; then
-		"$CMDAPTGET" install -y vsftpd
+		"$CMDAPTGET" install vsftpd -y
 		"$CMDCP" -f "$FILES"/vsftpd/vsftpd.conf /etc/vsftpd.conf
 
 		# récupèration certificats nginx
@@ -583,7 +586,7 @@ if FONCYES "$SERVFTP"; then
 		"$CMDCHMOD" 600 /var/log/vsftpd.log
 	FONCSERVICE restart vsftpd
 
-		"$CMDSED"  -i "/vsftpd/,+10d" /etc/fail2ban/jail.local
+		"$CMDSED" -i "/vsftpd/,+10d" /etc/fail2ban/jail.local
 
 		"$CMDCAT" <<- EOF >> /etc/fail2ban/jail.local
 
@@ -604,17 +607,17 @@ if FONCYES "$SERVFTP"; then
 		"$CMDECHO" ""; set "172" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 	fi
 
-	# déplacement clé 2048 bits
+	# déplacement clé 3072 bits
 	"$CMDCP" -f /tmp/dhparams.pem "$NGINXSSL"/dhparams.pem
 	"$CMDCHMOD" 600 "$NGINXSSL"/dhparams.pem
 	FONCSERVICE restart nginx
-	# contrôle clé 2048 bits
+	# contrôle clé 3072 bits
 if [ ! -f "$NGINXSSL"/dhparams.pem ]; then
 		"$CMDKILL" -HUP "$("$CMDPGREP" -x openssl)"
 		"$CMDECHO" ""; set "174"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
 	set "176"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
 	cd "$NGINXSSL" || exit
-		"$CMDOPENSSL" dhparam -out dhparams.pem 2048
+		"$CMDOPENSSL" dhparam -out dhparams.pem 3072
 		"$CMDCHMOD" 600 dhparams.pem
 	FONCSERVICE restart nginx
 		"$CMDECHO" ""; set "178" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
@@ -626,7 +629,7 @@ if [ ! -f "$NGINXSSL"/dhparams.pem ]; then
 	"$CMDSED" -i "s/userlog/$USER:5001/g;" "$RUTORRENT"/"$HISTOLOG".log
 
 	set "180"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
-if [ ! -f "$ARGFILE" ]; then
+if [! -f "$ARGFILE"]; then
 		"$CMDECHO" ""; set "182"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND}"
 	set "184"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}$USER${CEND}"
 	set "186"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND} ${CYELLOW}${PASSNGINX}${CEND}"
@@ -635,11 +638,11 @@ if [ ! -f "$ARGFILE" ]; then
 
 	# ajout utilisateur supplémentaire
 while :; do
-if [ ! -f "$ARGFILE" ]; then
+if [! -f "$ARGFILE"]; then
 	set "190"; FONCTXT "$1"; "$CMDECHO" -n -e "${CGREEN}$TXT1 ${CEND}"
 	read -r REPONSE
 else
-if [ -s "$ARGFILE" ]; then
+if [-s "$ARGFILE"]; then
 		REPONSE="y"
 else
 		REPONSE="n"
