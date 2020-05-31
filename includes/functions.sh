@@ -3,7 +3,7 @@
 FONCCONTROL () {
 if [[ $("$CMDUNAME" -m) == x86_64 ]] && [[ "$VERSION" = 9.* ]] || [[ "$VERSION" = 10.* ]]; then
 if [ "$("$CMDID" -u)" -ne 0 ]; then
-			"$CMDECHO" ""; set "100"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
+		"$CMDECHO" ""; set "100"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
 	exit 1
 fi
 else
@@ -47,7 +47,7 @@ if [ "$REPPWD" = "" ]; then
 		"$CMDECHO" ""; set "118" "120"; FONCTXT "$1" "$2"; "$CMDECHO"  -n -e "${CGREEN}$TXT1${CEND} ${CYELLOW}$AUTOPWD${CEND} ${CGREEN}$TXT2 ${CEND}"
 		read -r REPONSEPWD
 if FONCNO "$REPONSEPWD"; then
-				"$CMDECHO"
+			"$CMDECHO"
 else
 		USERPWD="$AUTOPWD"
 				# shellcheck disable=SC2104
@@ -70,11 +70,11 @@ FONCIP() {
 	"$CMDAPTGET" install -y net-tools
 	IP=$("$CMDIP" -4 addr | "$CMDGREP" "inet" | "$CMDGREP" -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | "$CMDAWK" '{print $2}' | "$CMDCUT" -d/ -f1)
 
-if [ "$IP" = "" ]; then
+if ["$IP" = ""]; then
 		IP=$("$CMDWGET" -qO- ipv4.icanhazip.com)
-if [ "$IP" = "" ]; then
+if ["$IP" = ""]; then
 		IP=$("$CMDWGET" -qO- ipv4.bonobox.net)
-if [ "$IP" = "" ]; then
+if ["$IP" = ""]; then
 		IP=x.x.x.x
 fi
 fi
@@ -84,7 +84,7 @@ fi
 FONCPORT() {
 	HISTO=$("$CMDWC" -l < "$RUTORRENT"/"$HISTOLOG".log)
 	# shellcheck disable=SC2034
-	PORT=$(( 5001+HISTO ))
+	PORT=$((5001+HISTO))
 }
 
 FONCYES() {
