@@ -1,15 +1,15 @@
 #!/bin/bash
 
 FONCCONTROL () {
-	if [[ $("$CMDUNAME" -m) == x86_64 ]] && [[ "$VERSION" = 9.* ]] || [[ "$VERSION" = 10.* ]]; then
-		if [ "$("$CMDID" -u)" -ne 0 ]; then
+if [[ $("$CMDUNAME" -m) == x86_64 ]] && [[ "$VERSION" = 9.* ]] || [[ "$VERSION" = 10.* ]]; then
+if [ "$("$CMDID" -u)" -ne 0 ]; then
 			"$CMDECHO" ""; set "100"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
-			exit 1
-		fi
-	else
+	exit 1
+fi
+else
 		"$CMDECHO" ""; set "130"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
-		exit 1
-	fi
+	exit 1
+fi
 }
 
 FONCBASHRC () {
@@ -20,74 +20,74 @@ FONCBASHRC () {
 }
 
 FONCUSER () {
-	while :; do
+while :; do
 		set "214"; FONCTXT "$1"; "$CMDECHO" -e "${CGREEN}$TXT1 ${CEND}"
 		read -r TESTUSER
 		"$CMDGREP" -w "$TESTUSER" /etc/passwd &> /dev/null
-		if [ $? -eq 1 ]; then
-			if [[ "$TESTUSER" =~ ^[a-z0-9]{3,}$ ]]; then
-				USER="$TESTUSER"
+if [ $? -eq 1 ]; then
+if [[ "$TESTUSER" =~ ^[a-z0-9]{3,}$ ]]; then
+		USER="$TESTUSER"
 				# shellcheck disable=SC2104
-				break
-			else
-				"$CMDECHO" ""; set "110"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
-			fi
-		else
-			"$CMDECHO" ""; set "198"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
-		fi
+			break
+else
+		"$CMDECHO" ""; set "110"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
+fi
+else
+		"$CMDECHO" ""; set "198"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
+fi
 	done
 }
 
 FONCPASS () {
-	while :; do
+while :; do
 		set "112" "114" "116"; FONCTXT "$1" "$2" "$3"; "$CMDECHO" -e "${CGREEN}$TXT1${CEND} ${CYELLOW}$TXT2${CEND} ${CGREEN}$TXT3 ${CEND}"
 		read -r REPPWD
-		if [ "$REPPWD" = "" ]; then
-			AUTOPWD=$("$CMDTR" -dc "1-9a-nA-Np-zP-Z" < /dev/urandom | "$CMDHEAD" -c 8)
-			"$CMDECHO" ""; set "118" "120"; FONCTXT "$1" "$2"; "$CMDECHO"  -n -e "${CGREEN}$TXT1${CEND} ${CYELLOW}$AUTOPWD${CEND} ${CGREEN}$TXT2 ${CEND}"
-			read -r REPONSEPWD
-			if FONCNO "$REPONSEPWD"; then
+if [ "$REPPWD" = "" ]; then
+		AUTOPWD=$("$CMDTR" -dc "1-9a-nA-Np-zP-Z" < /dev/urandom | "$CMDHEAD" -c 8)
+		"$CMDECHO" ""; set "118" "120"; FONCTXT "$1" "$2"; "$CMDECHO"  -n -e "${CGREEN}$TXT1${CEND} ${CYELLOW}$AUTOPWD${CEND} ${CGREEN}$TXT2 ${CEND}"
+		read -r REPONSEPWD
+if FONCNO "$REPONSEPWD"; then
 				"$CMDECHO"
-			else
-				USERPWD="$AUTOPWD"
+else
+		USERPWD="$AUTOPWD"
 				# shellcheck disable=SC2104
-				break
-			fi
-		else
-			if [[ "$REPPWD" =~ ^[a-zA-Z0-9]{6,}$ ]]; then
+			break
+fi
+	else
+if [[ "$REPPWD" =~ ^[a-zA-Z0-9]{6,}$ ]]; then
 				# shellcheck disable=SC2034
-				USERPWD="$REPPWD"
+		USERPWD="$REPPWD"
 				# shellcheck disable=SC2104
-				break
-			else
-				"$CMDECHO" ""; set "122"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
-			fi
+			break
+else
+		"$CMDECHO" ""; set "122"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
+fi
 		fi
 	done
 }
 
-FONCIP () {
+FONCIP() {
 	"$CMDAPTGET" install -y net-tools
 	IP=$("$CMDIP" -4 addr | "$CMDGREP" "inet" | "$CMDGREP" -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | "$CMDAWK" '{print $2}' | "$CMDCUT" -d/ -f1)
 
-	if [ "$IP" = "" ]; then
+if [ "$IP" = "" ]; then
 		IP=$("$CMDWGET" -qO- ipv4.icanhazip.com)
-			if [ "$IP" = "" ]; then
-				IP=$("$CMDWGET" -qO- ipv4.bonobox.net)
-				if [ "$IP" = "" ]; then
-					IP=x.x.x.x
-				fi
-			fi
-	fi
+if [ "$IP" = "" ]; then
+		IP=$("$CMDWGET" -qO- ipv4.bonobox.net)
+if [ "$IP" = "" ]; then
+		IP=x.x.x.x
+fi
+fi
+fi
 }
 
-FONCPORT () {
+FONCPORT() {
 	HISTO=$("$CMDWC" -l < "$RUTORRENT"/"$HISTOLOG".log)
 	# shellcheck disable=SC2034
 	PORT=$(( 5001+HISTO ))
 }
 
-FONCYES () {
+FONCYES() {
 	[ "$1" = "y" ] || [ "$1" = "Y" ] || [ "$1" = "o" ] || [ "$1" = "O" ] || [ "$1" = "j" ] || [ "$1" = "J" ] || [ "$1" = "д" ] || [ "$1" = "s" ] || [ "$1" = "S" ]
 }
 
@@ -95,50 +95,50 @@ FONCNO () {
 	[ "$1" = "n" ] || [ "$1" = "N" ] || [ "$1" = "h" ] || [ "$1" = "H" ]
 }
 
-FONCTXT () {
+FONCTXT() {
 	TXT1="$("$CMDGREP" "$1" "$BONOBOX"/lang/"$GENLANG".lang | "$CMDCUT" -c5-)"
 	TXT2="$("$CMDGREP" "$2" "$BONOBOX"/lang/"$GENLANG".lang | "$CMDCUT" -c5-)"
 	# shellcheck disable=SC2034
 	TXT3="$("$CMDGREP" "$3" "$BONOBOX"/lang/"$GENLANG".lang | "$CMDCUT" -c5-)"
 }
 
-FONCSERVICE () {
+FONCSERVICE() {
 	"$CMDSYSTEMCTL" "$1" "$2".service
 }
 # FONCSERVICE $1 {start/stop/restart} $2 {nom service}
 
-FONCFSUSER () {
+FONCFSUSER() {
 	FSUSER=$("$CMDGREP" /home/"$1" /etc/fstab | "$CMDCUT" -c 6-9)
-	if [ "$FSUSER" = "" ]; then
+if [ "$FSUSER" = "" ]; then
 		"$CMDECHO"
-	else
+else
 		"$CMDTUNE2FS" -m 0 /dev/"$FSUSER" &> /dev/null
 		"$CMDMOUNT" -o remount /home/"$1" &> /dev/null
-	fi
+fi
 }
 
-FONCHTPASSWD () {
+FONCHTPASSWD() {
 	"$CMDHTPASSWD" -bs "$NGINXPASS"/rutorrent_passwd "$1" "${PASSNGINX}"
 	"$CMDHTPASSWD" -cbs "$NGINXPASS"/rutorrent_passwd_"$1" "$1" "${PASSNGINX}"
 	"$CMDCHMOD" 640 "$NGINXPASS"/*
 	"$CMDCHOWN" -c "$WDATA" "$NGINXPASS"/*
 }
 
-FONCRTCONF () {
+FONCRTCONF() {
 	"$CMDCAT" <<- EOF >> "$NGINXENABLE"/rutorrent.conf
 
-		        location /$1 {
-		                include scgi_params;
-		                scgi_pass 127.0.0.1:$2;
-		                auth_basic "Restricted";
-		                auth_basic_user_file "$NGINXPASS/rutorrent_passwd_$3";
-		        }
+		location /$1 {
+		    include scgi_params;
+		    scgi_pass 127.0.0.1:$2;
+		    auth_basic "Restricted";
+		    auth_basic_user_file "$NGINXPASS/rutorrent_passwd_$3";
 		}
-	EOF
+	}
+EOF
 
-	if [ -f "$NGINXCONFD"/log_rutorrent.conf ]; then
+if [ -f "$NGINXCONFD"/log_rutorrent.conf ]; then
 		"$CMDSED" -i "2i\  /$USERMAJ 0;" "$NGINXCONFD"/log_rutorrent.conf
-	fi
+fi
 }
 
 FONCPHPCONF () {
@@ -162,21 +162,21 @@ FONCPHPCONF () {
 	"$CMDSED" -i "s/@PHPNAME@/$PHPNAME/g;" "$RUCONFUSER"/"$1"/config.php
 }
 
-FONCTORRENTRC () {
+FONCTORRENTRC() {
 	"$CMDCP" -f "$FILES"/rutorrent/rtorrent.rc /home/"$1"/.rtorrent.rc
 	"$CMDSED" -i "s/@USER@/$1/g;" /home/"$1"/.rtorrent.rc
 	"$CMDSED" -i "s/@PORT@/$2/g;" /home/"$1"/.rtorrent.rc
 	"$CMDSED" -i "s|@RUTORRENT@|$3|;" /home/"$1"/.rtorrent.rc
 }
 
-FONCSCRIPTRT () {
+FONCSCRIPTRT() {
 	"$CMDCP" -f "$FILES"/rutorrent/init.conf /etc/init.d/"$1"-rtorrent
 	"$CMDSED" -i "s/@USER@/$1/g;" /etc/init.d/"$1"-rtorrent
 	"$CMDCHMOD" +x /etc/init.d/"$1"-rtorrent
 	"$CMDUPDATERC" "$1"-rtorrent defaults
 }
 
-FONCIRSSI () {
+FONCIRSSI() {
 	IRSSIPORT=1"$2"
 	"$CMDMKDIR" -p /home/"$1"/.irssi/scripts/autorun
 	cd /home/"$1"/.irssi/scripts || exit
@@ -216,7 +216,7 @@ FONCBAKSESSION () {
 	EOF
 }
 
-FONCGEN () {
+FONCGEN() {
 	if [[ -f "$RAPPORT" ]]; then
 		"$CMDRM" "$RAPPORT"
 	fi
@@ -237,13 +237,13 @@ FONCGEN () {
 	EOF
 }
 
-FONCCHECKBIN () {
-	if hash "$1" 2>/dev/null; then
+FONCCHECKBIN() {
+if hash "$1" 2>/dev/null; then
 		"$CMDECHO"
-	else
+else
 		"$CMDAPTGET" -y install "$1"
 		"$CMDECHO" ""
-	fi
+fi
 }
 
 FONCGENRAPPORT () {
@@ -254,41 +254,41 @@ FONCGENRAPPORT () {
 
 FONCRAPPORT () {
 	# $1 = Fichier
-	if ! [[ -z "$1" ]]; then
-		if [[ -f "$1" ]]; then
-			if [[ $("$CMDWC" -l < "$1") == 0 ]]; then
-				FILE="--> Empty file"
-			else
+if ! [[ -z "$1" ]]; then
+if [[ -f "$1" ]]; then
+if [[ $("$CMDWC" -l < "$1") == 0 ]]; then
+		FILE="--> Empty file"
+else
 				FILE=$("$CMDCAT" "$1")
 				# domain.tld
-				if [[ "$1" = /etc/nginx/sites-enabled/* ]]; then
-					SERVER_NAME=$("$CMDGREP" server_name < "$1" | "$CMDCUT" -d';' -f1 | "$CMDSED" 's/ //' | "$CMDCUT" -c13-)
-					LETSENCRYPT=$("$CMDGREP" letsencrypt < "$1" | "$CMDHEAD" -1 | "$CMDCUT" -f 5 -d '/')
-					if ! [[ "$SERVER_NAME" = _ ]]; then
-						if [ -z "$LETSENCRYPT" ]; then
-							FILE=$("$CMDSED" "s/server_name[[:blank:]]${SERVER_NAME};/server_name domain.tld;/g;" "$1")
-						else
+if [[ "$1" = /etc/nginx/sites-enabled/* ]]; then
+		SERVER_NAME=$("$CMDGREP" server_name < "$1" | "$CMDCUT" -d';' -f1 | "$CMDSED" 's/ //' | "$CMDCUT" -c13-)
+		LETSENCRYPT=$("$CMDGREP" letsencrypt < "$1" | "$CMDHEAD" -1 | "$CMDCUT" -f 5 -d '/')
+if ! [[ "$SERVER_NAME" = _ ]]; then
+if [ -z "$LETSENCRYPT" ]; then
+		FILE=$("$CMDSED" "s/server_name[[:blank:]]${SERVER_NAME};/server_name domain.tld;/g;" "$1")
+else
 							FILE=$("$CMDSED" "s/server_name[[:blank:]]${SERVER_NAME};/server_name domain.tld;/g; s/$LETSENCRYPT/domain.tld/g;" "$1")
 						fi
 					fi
 				fi
 			fi
-		else
+else
 			FILE="--> Invalid File"
 		fi
-	else
+else
 		FILE="--> Invalid File"
-	fi
+fi
 
 	# $2 = Nom à afficher
-	if [[ -z $2 ]]; then
+if [[ -z $2 ]]; then
 		NAME="No name given"
 	else
 		NAME=$2
-	fi
+fi
 
 	# $3 = Affichage "$CMDHEAD"er
-	if [[ $3 == 1 ]]; then
+if [[ $3 == 1 ]]; then
 		"$CMDCAT" <<-EOF >> "$RAPPORT"
 
 			.......................................................................................................................................

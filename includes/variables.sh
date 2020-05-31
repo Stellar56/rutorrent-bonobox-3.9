@@ -20,7 +20,7 @@ elif [[ "$VERSION" = 10.* ]]; then
 	DEBNAME="buster"
 fi
 
-HISTOLOG="histo-2019"
+HISTOLOG="histo-2020"
 PHPNAME="php7.3"
 PHPPATH="/etc/php/7.3"
 PHPSOCK="/run/php/php7.3-fpm.sock"

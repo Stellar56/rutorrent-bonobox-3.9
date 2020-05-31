@@ -141,7 +141,7 @@ fi
 	# bind9 & dhcp
 if [! -d /etc/bind]; then
 		"$CMDRM" /etc/init.d/bind9 &> /dev/null
-		"$CMDAPTGET" install bind9 -y
+		"$CMDAPTGET" install -y bind9
 fi
 
 if [-f /etc/dhcp/dhclient.conf]; then
@@ -346,13 +346,13 @@ for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2'
 	"$CMDPIP" install cloudscraper
 
 	# configuration geoip2
-	cd "$RUPLUGINS"/geoip2/database || exit
+	#cd "$RUPLUGINS"/geoip2/database || exit
 
-for DATABASE in *.tar.gz; do
-		"$CMDTAR" xzfv "$DATABASE"
-	done
+#for DATABASE in *.tar.gz; do
+		#"$CMDTAR" xzfv "$DATABASE"
+	#done
 
-	"$CMDRM" -R GeoLite2-City.mmdb.tar.gz GeoLite2-Country.mmdb.tar.gz
+	#"$CMDRM" -R GeoLite2-City.mmdb.tar.gz GeoLite2-Country.mmdb.tar.gz
 
 	#"$CMDWGET" https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 	#"$CMDTAR" xzfv GeoLite2-City.tar.gz
@@ -574,7 +574,7 @@ done
 
 	# installation vsftpd
 if FONCYES "$SERVFTP"; then
-		"$CMDAPTGET" install vsftpd -y
+		"$CMDAPTGET" install -y vsftpd
 		"$CMDCP" -f "$FILES"/vsftpd/vsftpd.conf /etc/vsftpd.conf
 
 		# récupèration certificats nginx
@@ -611,6 +611,7 @@ if FONCYES "$SERVFTP"; then
 	"$CMDCP" -f /tmp/dhparams.pem "$NGINXSSL"/dhparams.pem
 	"$CMDCHMOD" 600 "$NGINXSSL"/dhparams.pem
 	FONCSERVICE restart nginx
+	
 	# contrôle clé 3072 bits
 if [ ! -f "$NGINXSSL"/dhparams.pem ]; then
 		"$CMDKILL" -HUP "$("$CMDPGREP" -x openssl)"
