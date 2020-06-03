@@ -4,7 +4,7 @@ CMDPATH=$(/usr/bin/lsb_release -cs)
 
 
 # Youre distribution can be upgrated to buster but still have the program runing in /bin
-if [[ "$CMDPATH" == stretch ]]  || [ ! -f "/usr/bin/bash" ]; then
+if [["$CMDPATH" == stretch]]  || [! -f "/usr/bin/bash"]; then
         # variables cmd stretch
         CMDAPTGET="/usr/bin/apt-get"
         CMDAPTKEY="/usr/bin/apt-key"
@@ -76,7 +76,7 @@ if [[ "$CMDPATH" == stretch ]]  || [ ! -f "/usr/bin/bash" ]; then
         CMDXARGS="/usr/bin/xargs"
         CMDZIP="/usr/bin/zip"
 
-elif [[ "$CMDPATH" == buster ]]; then
+elif [["$CMDPATH" == buster]]; then
         # variables cmd buster
         CMDAPTGET="/usr/bin/apt-get"
         CMDAPTKEY="/usr/bin/apt-key"
@@ -148,4 +148,3 @@ elif [[ "$CMDPATH" == buster ]]; then
         CMDXARGS="/usr/bin/xargs"
         CMDZIP="/usr/bin/zip"
 fi
-

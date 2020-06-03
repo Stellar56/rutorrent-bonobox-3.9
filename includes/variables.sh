@@ -11,11 +11,11 @@ CBLUE="${CSI}1;34m"
 ARG="$*"
 VERSION=$("$CMDCAT" /etc/debian_version)
 
-if [[ "$VERSION" = 9.* ]]; then
+if [["$VERSION" = 9.*]]; then
 	DEBNUMBER="Debian_9.0.deb"
 	DEBNAME="stretch"
 
-elif [[ "$VERSION" = 10.* ]]; then
+elif [["$VERSION" = 10.*]]; then
 	DEBNUMBER="Debian_10.0.deb"
 	DEBNAME="buster"
 fi
@@ -30,9 +30,9 @@ PHPSOCK="/run/php/php7.3-fpm.sock"
 LIBTORRENT="v0.13.8"
 RTORRENT="v0.9.8"
 
-#LIBZEN0="0.4.37"
-#LIBMEDIAINFO0="19.04"
-#MEDIAINFO="19.04"
+LIBZEN0="0.4.38"
+LIBMEDIAINFO0="20.03"
+MEDIAINFO="20.03"
 
 RUTORRENT="/var/www/rutorrent"
 RUPLUGINS="/var/www/rutorrent/plugins"
