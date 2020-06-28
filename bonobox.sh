@@ -35,31 +35,31 @@
 # This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
 
 
-# includes
-INCLUDES="includes"
-# shellcheck source=/dev/null
-. "$INCLUDES"/cmd.sh
-# shellcheck source=/dev/null
-. "$INCLUDES"/variables.sh
-# shellcheck source=/dev/null
-. "$INCLUDES"/langues.sh
-# shellcheck source=/dev/null
-. "$INCLUDES"/functions.sh
+		# includes
+	INCLUDES="includes"
+		# shellcheck source=/dev/null
+	. "$INCLUDES"/cmd.sh
+		# shellcheck source=/dev/null
+	. "$INCLUDES"/variables.sh
+		# shellcheck source=/dev/null
+	. "$INCLUDES"/langues.sh
+		# shellcheck source=/dev/null
+	. "$INCLUDES"/functions.sh
 
-# contrôle droits utilisateur & OS
-FONCCONTROL
-FONCBASHRC
+		# contrôle droits utilisateur & OS
+	FONCCONTROL
+	FONCBASHRC
 
-# contrôle installation
+		# contrôle installation
 if [! -f "$NGINXENABLE"/rutorrent.conf]; then
-	# contröle wget
+		# contröle wget
 if [! -f "$CMDWGET"]; then
 		"$CMDAPTGET" install -y wget &>/dev/null
 fi
 
-	# log de l'installation
+		# log de l'installation
 	exec > >("$CMDTEE" "/tmp/install.log") 2>&1
-	# liste users en arguments
+		# liste users en arguments
 	TESTARG=$("$CMDECHO" "$ARG" | "$CMDTR" -s ' ' '\n' | "$CMDGREP" :)
 if [! -z "$TESTARG"]; then
 		"$CMDECHO" "$ARG" | "$CMDTR" -s ' ' '\n' | "$CMDGREP" : > "$ARGFILE"
@@ -69,19 +69,20 @@ fi
 # lancement installation ruTorrent #
 ####################################
 
-	# message d'accueil
+		# message d'accueil
 	"$CMDCLEAR"
 	"$CMDECHO" ""; set "102"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"; "$CMDECHO" ""
-	# shellcheck source=/dev/null
+		
+		# shellcheck source=/dev/null
 	. "$INCLUDES"/logo.sh
 
 if [! -s "$ARGFILE"]; then
 		"$CMDECHO" ""
-		FONCUSER # demande nom user
+	FONCUSER # demande nom user
 		"$CMDECHO" ""
-		FONCPASS # demande mot de passe
+	FONCPASS # demande mot de passe
 else
-		FONCARG
+	FONCARG
 fi
 
 	PORT=5001
@@ -92,13 +93,13 @@ if [-z "$ARGFTP"]; then
 		read -r SERVFTP
 else
 if ["$ARGFTP" = "ftp-off"]; then
-		SERVFTP="n"
+	SERVFTP="n"
 else
-		SERVFTP="y"
+	SERVFTP="y"
 fi
 fi
 
-	# récupération 5% root sur /home ou /home/user si présent
+		# récupération 5% root sur /home ou /home/user si présent
 	FSHOME=$("$CMDDF" -h | "$CMDGREP" /home | "$CMDCUT" -c 6-9)
 if ["$FSHOME" = ""]; then
 		"$CMDECHO"
@@ -109,36 +110,36 @@ fi
 
 	FONCFSUSER "$USER"
 
-	# variable passe nginx
+		# variable passe nginx
 	PASSNGINX=${USERPWD}
 
-	# ajout utilisateur
+		# ajout utilisateur
 	"$CMDUSERADD" -M -s /bin/bash "$USER"
 
-	# création mot de passe utilisateur
+		# création mot de passe utilisateur
 	"$CMDECHO" "${USER}:${USERPWD}" | "$CMDCHPASSWD"
 
-	# anti-bug /home/user déjà existant
+		# anti-bug /home/user déjà existant
 	"$CMDMKDIR" -p /home/"$USER"
 	"$CMDCHOWN" -R "$USER":"$USER" /home/"$USER"
 
-	# variable utilisateur majuscule
+		# variable utilisateur majuscule
 	USERMAJ=$("$CMDECHO" "$USER" | "$CMDTR" "[:lower:]" "[:upper:]")
 
-	# récupération ip serveur
+		# récupération ip serveur
 	FONCIP
 
-	# récupération threads & sécu -j illimité
+		# récupération threads & sécu -j illimité
 	THREAD=$("$CMDGREP" -c processor < /proc/cpuinfo)
 if ["$THREAD" = ""]; then
 	THREAD=1
 fi
 
-	# ajout dépôts
-	# shellcheck source=/dev/null
+# ajout dépôts
+# shellcheck source=/dev/null
 	. "$INCLUDES"/deb.sh
 
-	# bind9 & dhcp
+		# bind9 & dhcp
 if [! -d /etc/bind]; then
 	"$CMDRM" /etc/init.d/bind9 &> /dev/null
 	"$CMDAPTGET" install -y bind9
@@ -148,13 +149,13 @@ if [-f /etc/dhcp/dhclient.conf]; then
 	"$CMDSED" -i "s/#prepend domain-name-servers 127.0.0.1;/prepend domain-name-servers 127.0.0.1;/g;" /etc/dhcp/dhclient.conf
 fi
 
-	"$CMDCP" -f "$FILES"/bind/named.conf.options /etc/bind/named.conf.options
+		"$CMDCP" -f "$FILES"/bind/named.conf.options /etc/bind/named.conf.options
 
-	"$CMDSED" -i '/127.0.0.1/d' /etc/resolv.conf # pour éviter doublon
-	"$CMDECHO" "nameserver 127.0.0.1" >> /etc/resolv.conf
+		"$CMDSED" -i '/127.0.0.1/d' /etc/resolv.conf # pour éviter doublon
+		"$CMDECHO" "nameserver 127.0.0.1" >> /etc/resolv.conf
 	FONCSERVICE restart bind9
 
-	# installation des paquets
+		# installation des paquets
 	"$CMDAPTGET" update && "$CMDAPTGET" upgrade -y
 	"$CMDECHO" ""; set "132" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
@@ -237,21 +238,20 @@ fi
 
 	"$CMDECHO" ""; set "136" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# génération clé 3072 bits
-	"$CMDOPENSSL" dhparam -out dhparams.pem 3072 >/dev/null 2>&1 &
+		# génération clé 4096 bits
+	"$CMDOPENSSL" dhparam -out dhparams.pem 4096 >/dev/null 2>&1 &
 
-	# téléchargement complément favicons
+		# téléchargement complément favicons
 	"$CMDWGET" -T 10 -t 3 http://www.bonobox.net/script/favicon.tar.gz || "$CMDWGET" -T 10 -t 3 http://alt.bonobox.net/favicon.tar.gz
 	"$CMDTAR" xzfv favicon.tar.gz
 
-	# création fichiers couleurs nano
+		# création fichiers couleurs nano
 	"$CMDCP" -f "$FILES"/nano/ini.nanorc /usr/share/nano/ini.nanorc
 	"$CMDCP" -f "$FILES"/nano/conf.nanorc /usr/share/nano/conf.nanorc
 	"$CMDCP" -f "$FILES"/nano/xorg.nanorc /usr/share/nano/xorg.nanorc
 
-	# configuration nano
-	"$CMDCAT" <<- EOF >> /etc/nanorc
-
+		# configuration nano
+"$CMDCAT" <<- EOF >> /etc/nanorc
 		## Config Files (.ini)
 		include "/usr/share/nano/ini.nanorc"
 
@@ -264,7 +264,7 @@ fi
 
 	"$CMDECHO" ""; set "138" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# configuration ntp & réglage heure fr
+		# configuration ntp & réglage heure fr
 if ["$GENLANG" = "fr"]; then
 	"$CMDECHO" "Europe/Paris" > /etc/timezone
 	"$CMDCP" -f /usr/share/zoneinfo/Europe/Paris /etc/localtime
@@ -274,20 +274,19 @@ if ["$GENLANG" = "fr"]; then
 	"$CMDSED" -i "s/server 2/#server 2/g;" /etc/ntp.conf
 	"$CMDSED" -i "s/server 3/#server 3/g;" /etc/ntp.conf
 
-	"$CMDCAT" <<- EOF >> /etc/ntp.conf
-
-			server 0.fr.pool.ntp.org
-			server 1.fr.pool.ntp.org
-			server 2.fr.pool.ntp.org
-			server 3.fr.pool.ntp.org
-		EOF
+"$CMDCAT" <<- EOF >> /etc/ntp.conf
+		server 0.fr.pool.ntp.org
+		server 1.fr.pool.ntp.org
+		server 2.fr.pool.ntp.org
+		server 3.fr.pool.ntp.org
+	EOF
 
 	"$CMDNTPDATE" -d 0.fr.pool.ntp.org
 fi
 
-	# installation xmlrpc libtorrent rtorrent
+		# installation xmlrpc libtorrent rtorrent
 	cd /tmp || exit
-	"$CMDGIT" clone --progress https://github.com/mirror/xmlrpc-c.git
+		"$CMDGIT" clone --progress https://github.com/mirror/xmlrpc-c.git
 
 	cd xmlrpc-c/advanced || exit
 	./configure #--disable-cplusplus
@@ -295,45 +294,45 @@ fi
 	"$CMDMAKE" install
 	"$CMDECHO" ""; set "140" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# clone rtorrent et libtorrent
+		# clone rtorrent et libtorrent
 	cd /tmp || exit
-	"$CMDGIT" clone --progress https://github.com/rakshasa/libtorrent.git
-	"$CMDGIT" clone --progress https://github.com/rakshasa/rtorrent.git
+		"$CMDGIT" clone --progress https://github.com/rakshasa/libtorrent.git
+		"$CMDGIT" clone --progress https://github.com/rakshasa/rtorrent.git
 
-	# compilation libtorrent
+		# compilation libtorrent
 	cd libtorrent || exit
-	"$CMDGIT" checkout "$LIBTORRENT"
-	./autogen.sh
-	./configure --disable-debug
-	"$CMDMAKE" -j "$THREAD"
-	"$CMDMAKE" install
-	"$CMDECHO" ""; set "142" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1 $LIBTORRENT${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
+		"$CMDGIT" checkout "$LIBTORRENT"
+		./autogen.sh
+		./configure --disable-debug
+		"$CMDMAKE" -j "$THREAD"
+		"$CMDMAKE" install
+		"$CMDECHO" ""; set "142" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1 $LIBTORRENT${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# compilation rtorrent
+		# compilation rtorrent
 	cd ../rtorrent || exit
-	"$CMDGIT" checkout "$RTORRENT"
-	./autogen.sh
-	./configure --with-xmlrpc-c --with-ncurses --disable-debug
-	"$CMDMAKE" -j "$THREAD"
-	"$CMDMAKE" install
-	"$CMDLDCONFIG"
-	"$CMDECHO" ""; set "144" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1 $RTORRENT${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
+		"$CMDGIT" checkout "$RTORRENT"
+		./autogen.sh
+		./configure --with-xmlrpc-c --with-ncurses --disable-debug
+		"$CMDMAKE" -j "$THREAD"
+		"$CMDMAKE" install
+		"$CMDLDCONFIG"
+		"$CMDECHO" ""; set "144" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1 $RTORRENT${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# création des dossiers
+		# création des dossiers
 	"$CMDSU" "$USER" -c ""$CMDMKDIR" -p ~/watch ~/torrents ~/.session ~/.backup-session"
 
-	# création dossier scripts perso
+		# création dossier scripts perso
 	"$CMDMKDIR" "$SCRIPT"
 
-	# création accueil serveur
+		# création accueil serveur
 	"$CMDMKDIR" -p "$NGINXWEB"
 	"$CMDCP" -R "$BONOBOX"/base "$NGINXBASE"
 
-	# téléchargement et déplacement de rutorrent
+		# téléchargement et déplacement de rutorrent
 	"$CMDGIT" clone --progress https://github.com/Novik/ruTorrent.git "$RUTORRENT"
 	"$CMDECHO" ""; set "146" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# installation des plugins - thank Micdu70 ;)
+		# installation des plugins - thank Micdu70 ;)
 	cd /tmp || exit
 	"$CMDGIT" clone --progress https://github.com/Stellar56/rutorrent-plugins-pack
 
@@ -341,25 +340,25 @@ for PLUGINS in 'addzip' 'autodl-irssi' 'chat' 'filemanager' 'fileshare' 'geoip2'
 	"$CMDCP" -R /tmp/rutorrent-plugins-pack/"$PLUGINS" "$RUPLUGINS"/
 done
 
-	# installation cloudscraper pour _cloudflare
+		# installation cloudscraper pour _cloudflare
 	"$CMDPIP" install setuptools --upgrade
 	"$CMDPIP" install cloudscraper
 
-	# configuration geoip2
-	#cd "$RUPLUGINS"/geoip2/database || exit
+# configuration geoip2
+#cd "$RUPLUGINS"/geoip2/database || exit
 
 #for DATABASE in *.tar.gz; do
-		#"$CMDTAR" xzfv "$DATABASE"
-	#done
+	#"$CMDTAR" xzfv "$DATABASE"
+#done
 
 	#"$CMDRM" -R GeoLite2-City.mmdb.tar.gz GeoLite2-Country.mmdb.tar.gz
 
-	#"$CMDWGET" https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+#"$CMDWGET" https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 	#"$CMDTAR" xzfv GeoLite2-City.tar.gz
 	#cd /tmp/GeoLite2-City_* || exit
-	#"$CMDMV" GeoLite2-City.mmdb "$RUPLUGINS"/geoip2/database/GeoLite2-City.mmdb
+#"$CMDMV" GeoLite2-City.mmdb "$RUPLUGINS"/geoip2/database/GeoLite2-City.mmdb
 
-	# configuration filemanager
+		# configuration filemanager
 	"$CMDCP" -f "$FILES"/rutorrent/filemanager.conf "$RUPLUGINS"/filemanager/conf.php
 	"$CMDSED" -i "s|@RAR@|$CMDRAR|g;" "$RUPLUGINS"/filemanager/conf.php
 	"$CMDSED" -i "s|@ZIP@|$CMDZIP|g;" "$RUPLUGINS"/filemanager/conf.php
@@ -368,22 +367,23 @@ done
 	"$CMDSED" -i "s|@GZIP@|$CMDGZIP|g;" "$RUPLUGINS"/filemanager/conf.php
 	"$CMDSED" -i "s|@BZIP2@|$CMDBZIP2|g;" "$RUPLUGINS"/filemanager/conf.php
 
-	# configuration fileshare
+		# configuration fileshare
 	"$CMDCP" -f "$FILES"/rutorrent/fileshare.conf "$RUPLUGINS"/fileshare/conf.php
 	"$CMDSED" -i "s/@IP@/$IP/g;" "$RUPLUGINS"/fileshare/conf.php
 	"$CMDCHOWN" -R "$WDATA" "$RUPLUGINS"/fileshare
 	"$CMDLN" -s "$RUPLUGINS"/fileshare/share.php "$NGINXBASE"/share.php
 
-	# configuration create
-	# shellcheck disable=SC2154
+# configuration create
+# shellcheck disable=SC2154
 	"$CMDSED" -i "s#$useExternal = false;#$useExternal = 'mktorrent';#" "$RUPLUGINS"/create/conf.php
-	# shellcheck disable=SC2154
+	
+		# shellcheck disable=SC2154
 	"$CMDSED" -i "s#$pathToCreatetorrent = '';#$pathToCreatetorrent = '/usr/bin/mktorrent';#" "$RUPLUGINS"/create/conf.php
 
-	# configuration logoff
+		# configuration logoff
 	"$CMDSED" -i "s/scars,user1,user2/$USER/g;" "$RUPLUGINS"/logoff/conf.php
 
-	# configuration autodl-irssi
+		# configuration autodl-irssi
 	cd "$RUPLUGINS" || exit
 	"$CMDCP" -f autodl-irssi/_conf.php autodl-irssi/conf.php
 	"$CMDCP" -f autodl-irssi/css/oblivion.min.css autodl-irssi/css/spiritofbonobo.min.css
@@ -391,10 +391,10 @@ done
 	"$CMDTOUCH" autodl-irssi/css/materialdesign.min.css
 	FONCIRSSI "$USER" "$PORT" "$USERPWD"
 
-	# installation mediainfo
-	# FONCMEDIAINFO
+# installation mediainfo
+# FONCMEDIAINFO
 
-	# variable minutes aléatoire crontab geoip2
+		# variable minutes aléatoire crontab geoip2
 	MAXIMUM=58
 	MINIMUM=1
 	UPGEOIP=$((MINIMUM+RANDOM*(1+MAXIMUM-MINIMUM)/32767))
@@ -417,18 +417,18 @@ for COPY in 'updateGeoIP.sh' 'backup-session.sh'; do
 	"$CMDCP" -R "$BONOBOX"/theme/ru/SpiritOfBonobo "$RUPLUGINS"/theme/themes/SpiritOfBonobo
 	"$CMDGIT" clone --progress https://github.com/themightykitten/ruTorrent-MaterialDesign.git "$RUPLUGINS"/theme/themes/MaterialDesign
 
-	# configuration thème
+		# configuration thème
 	"$CMDSED" -i "s/defaultTheme = \"\"/defaultTheme = \"SpiritOfBonobo\"/g;" "$RUPLUGINS"/theme/conf.php
 
 	"$CMDECHO" ""; set "148" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# liens symboliques et permissions
+		# liens symboliques et permissions
 	"$CMDLDCONFIG"
 	"$CMDCHOWN" -R "$WDATA" "$RUTORRENT"
 	"$CMDCHMOD" -R 777 "$RUPLUGINS"/filemanager/scripts
 	"$CMDCHOWN" -R "$WDATA" "$NGINXBASE"
 
-	# configuration php
+		# configuration php
 	"$CMDSED" -i "s/2M/10M/g;" "$PHPPATH"/fpm/php.ini
 	"$CMDSED" -i "s/8M/10M/g;" "$PHPPATH"/fpm/php.ini
 	"$CMDSED" -i "s/expose_php = On/expose_php = Off/g;" "$PHPPATH"/fpm/php.ini
@@ -453,7 +453,7 @@ fi
 	"$CMDTOUCH" "$NGINXPASS"/rutorrent_passwd
 	"$CMDCHMOD" 640 "$NGINXPASS"/rutorrent_passwd
 
-	# configuration serveur web
+		# configuration serveur web
 	"$CMDMKDIR" "$NGINXENABLE"
 	"$CMDCP" -f "$FILES"/nginx/nginx.conf "$NGINX"/nginx.conf
 for CONF in 'log_rutorrent.conf' 'ciphers.conf' 'cache.conf' 'php.conf'; do
@@ -468,8 +468,8 @@ done
 
 	"$CMDECHO" ""; set "152" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 
-	# configuration ssl
-	"$CMDOPENSSL" req -x509 -sha512 -nodes -days 3658 -newkey rsa:4096 -keyout "$NGINXSSL"/server.key -out "$NGINXSSL"/server.crt <<- EOF
+		# configuration ssl
+"$CMDOPENSSL" req -x509 -sha512 -nodes -days 3658 -newkey rsa:4096 -keyout "$NGINXSSL"/server.key -out "$NGINXSSL"/server.crt <<- EOF
 		KP
 		North Korea
 		Pyongyang
@@ -482,20 +482,20 @@ done
 	"$CMDRM" -R "${NGINXWEB:?}"/html &> /dev/null
 	"$CMDRM" "$NGINXENABLE"/default &> /dev/null
 
-	# logrotate
+		# logrotate
 	"$CMDCP" -f "$FILES"/nginx/logrotate /etc/logrotate.d/nginx
 
-	# configuration ssh
+		# configuration ssh
 	"$CMDSED" -i "s/Subsystem[[:blank:]]sftp[[:blank:]]\/usr\/lib\/openssh\/sftp-server/Subsystem sftp internal-sftp/g;" /etc/ssh/sshd_config
 	"$CMDSED" -i "s/UsePAM/#UsePAM/g;" /etc/ssh/sshd_config
 
-	# chroot user
-	"$CMDCAT" <<- EOF >> /etc/ssh/sshd_config
+		# chroot user
+"$CMDCAT" <<- EOF >> /etc/ssh/sshd_config
 		Match User $USER
 		ChrootDirectory /home/$USER
 	EOF
 
-	# configuration .rtorrent.rc
+		# configuration .rtorrent.rc
 	FONCTORRENTRC "$USER" "$PORT" "$RUTORRENT"
 
 		# permissions
@@ -543,8 +543,7 @@ EOF
 	"$CMDCP" -f /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 	"$CMDSED" -i "/ssh/,+6d" /etc/fail2ban/jail.local
 
-	"$CMDCAT" <<- EOF >> /etc/fail2ban/jail.local
-
+"$CMDCAT" <<- EOF >> /etc/fail2ban/jail.local
 		[ssh]
 		enabled  = true
 		port     = ssh
@@ -596,7 +595,7 @@ FONCSERVICE restart vsftpd
 		logpath  = /var/log/vsftpd.log
 		banaction = iptables-multiport
 			
-		# or overwrite it in jails.local to be
+# or overwrite it in jails.local to be
 		# logpath = /var/log/auth.log
 		# if you want to rely on PAM failed login attempts
 		# vsftpd's failregex should match both of those formats
@@ -607,18 +606,18 @@ EOF
 		"$CMDECHO" ""; set "172" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
 fi
 
-		# déplacement clé 3072 bits
+		# déplacement clé 4096 bits
 	"$CMDCP" -f /tmp/dhparams.pem "$NGINXSSL"/dhparams.pem
 	"$CMDCHMOD" 600 "$NGINXSSL"/dhparams.pem
 FONCSERVICE restart nginx
 	
-		# contrôle clé 3072 bits
+		# contrôle clé 4096 bits
 if [ ! -f "$NGINXSSL"/dhparams.pem ]; then
 		"$CMDKILL" -HUP "$("$CMDPGREP" -x openssl)"
 		"$CMDECHO" ""; set "174"; FONCTXT "$1"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}"
 	set "176"; FONCTXT "$1"; "$CMDECHO" -e "${CRED}$TXT1${CEND}"; "$CMDECHO" ""
 	cd "$NGINXSSL" || exit
-		"$CMDOPENSSL" dhparam -out dhparams.pem 3072
+		"$CMDOPENSSL" dhparam -out dhparams.pem 4096
 		"$CMDCHMOD" 600 dhparams.pem
 FONCSERVICE restart nginx
 		"$CMDECHO" ""; set "178" "134"; FONCTXT "$1" "$2"; "$CMDECHO" -e "${CBLUE}$TXT1${CEND}${CGREEN}$TXT2${CEND}"; "$CMDECHO" ""
@@ -784,8 +783,9 @@ if [! -f "$ARGFILE"]; then
 fi
 done
 else
-	# lancement lancement gestion des utilisateurs
+		# lancement lancement gestion des utilisateurs
 	"$CMDCHMOD" +x ./gestion-users.sh
-	# shellcheck source=/dev/null
+	
+		# shellcheck source=/dev/null
 	source ./gestion-users.sh
 fi
